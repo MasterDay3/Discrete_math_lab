@@ -1,5 +1,6 @@
 print('hello world')
 print('hello world')
+print('lutuy gas')
 
 a = 10 
 b = a + 2
