@@ -34,7 +34,7 @@ def read_data(filepath: str) -> list:
 
 def create_comp_dict(content: list) -> dict:
     '''
-    creates dict of dict with сумісність of components
+    creates dict of dict with несумісність of components
     '''
 
     if not isinstance(content, list):
@@ -48,7 +48,7 @@ def create_comp_dict(content: list) -> dict:
         comp_dict[el] = dict()
 
         for el1 in content[2][1:]:
-            comp_dict[el][el1] = False
+            comp_dict[el][el1] = True
 
 
     for key, dic in comp_dict.items():
@@ -57,10 +57,10 @@ def create_comp_dict(content: list) -> dict:
             comp1, comp2 = remake(el)
 
             if comp1 == key:
-                dic[comp2] = True
+                dic[comp2] = False
 
             if comp2 == key:
-                dic[comp1] = True
+                dic[comp1] = False
 
     return comp_dict
 
