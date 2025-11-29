@@ -43,41 +43,82 @@ def create_comp_dict(content: list) -> dict:
     if not content:
         raise ValueError('Некоректний ввід в функцію, перевірте, що ви ввели (create_dict)')
 
-    comp_dict = {}
-    for el in content[2][1:]:
-        comp_dict[el] = dict()
+    try:
+        comp_dict = {}
+        for el in content[2][1:]:
+            comp_dict[el] = dict()
 
-        for el1 in content[2][1:]:
-            comp_dict[el][el1] = True
-
-
-    for key, dic in comp_dict.items():
-
-        for el in content[3][1:]:
-            comp1, comp2 = remake(el)
-
-            if comp1 == key:
-                dic[comp2] = False
-
-            if comp2 == key:
-                dic[comp1] = False
-
-    return comp_dict
+            for el1 in content[2][1:]:
+                comp_dict[el][el1] = True
 
 
+        for key, dic in comp_dict.items():
+
+            for el in content[3][1:]:
+                comp1, comp2 = remake(el)
+
+                if comp1 == key:
+                    dic[comp2] = False
+
+                if comp2 == key:
+                    dic[comp1] = False
+
+        return comp_dict
+    except Exception:
+        raise ValueError('Некоректний ввід в функцію, перевірте, що ви ввели у фалі')
 
 
 
-def create_necessary(content: list) -> dict:
+
+
+def create_packets(content: list) -> dict:
     '''
     creates dict with necessary comps
     '''
 
     if not isinstance(content, list):
-        raise ValueError('Направильний ввід create_necessary()')
+        raise ValueError('Направильний ввід create_packets()')
 
     if not content:
-        raise ValueError('Направильний ввід create_necessary()')
+        raise ValueError('Направильний ввід create_packets()')
+
+    try:
+
+        packets = {}
+        itter = iter(content[4][1:])
+
+        for el in itter:
+            key, value = packet_remake(el)
+            packets[key] = value
+
+
+        return packets
+
+
+
+    except Exception:
+        raise ValueError('Некоректний ввід в функцію, перевірте, що ви ввели у фалі')
+
+
+
+
+
+def packet_remake(line: str) -> list:
+    '''
+    helping functuion that devides line into parts for packets for better handling
+    '''
+
+    if not isinstance(line, str):
+        raise ValueError('Ви погано ввели дані в функцію packet_remake')
+
+    parts = line.split(':')
+
+    if len(parts) != 2:
+        raise ValueError('Ви погано ввели дані в функцію packet_remake')
+    key = parts[0].strip()
+    value = parts[1].strip().split(',')
+
+    return key, value
 
 
 
@@ -107,3 +148,4 @@ def remake(line: str) -> list:
 
 all_text = read_data(FILENAME)
 diction = create_comp_dict(all_text)
+diction1 = create_packets(all_text)
