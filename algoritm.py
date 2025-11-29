@@ -9,3 +9,6 @@ print()
 
 def potuzhnist():
   return
+print('pusshh')
+print('q123')
+print('1')
