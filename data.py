@@ -4,7 +4,7 @@ Create data from file
 
 
 # example
-filename = 'data.txt'
+FILENAME = 'data.txt'
 
 def read_data(filepath: str) -> list:
     '''
@@ -105,5 +105,5 @@ def remake(line: str) -> list:
 
 
 
-all_txt = read_data(filename)
-dic = create_comp_dict(all_txt)
+all_text = read_data(FILENAME)
+diction = create_comp_dict(all_text)
