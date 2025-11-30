@@ -18,7 +18,7 @@ def check_request(request: str) -> bool:
     Якщо не можна через не сумісніть, повертає False'''
     key = checked[request]
     for ch in key:
-        if key[ch] is False and key[ch] in user_list:
+        if key[ch] is False and ch in user_list:
             return False
     return True
 
@@ -33,3 +33,12 @@ def add_component(request: str) -> bool:
         return True
     return False
 
+
+
+def delete_component(request: str) -> bool:
+    '''Видаляє компоненту з обраних
+    Повертає True, якщо компоненту видалено і False, якщо її не було в списку'''
+    if request in user_list:
+        user_list.remove(request)
+        return True
+    return False
