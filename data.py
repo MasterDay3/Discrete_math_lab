@@ -91,7 +91,7 @@ def create_comp_dict(content: list) -> dict:
         return comp_dict
     except Exception:
         raise ValueError('Некоректний ввід в функцію, перевірте,\
-                          що ви ввели у фалі, щось пішло не так')
+що ви ввели у фалі, щось пішло не так')
 
 
 
