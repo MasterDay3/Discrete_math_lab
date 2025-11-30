@@ -5,9 +5,6 @@ Functions to get data from file
 
 
 
-
-
-
 def read_data(filepath: str) -> list:
     '''
     function to read data from file with certain order
@@ -40,13 +37,6 @@ def read_data(filepath: str) -> list:
 
     return whole_sorted
 
-
-
-
-
-
-
-
 def create_comp_dict(content: list) -> dict:
     '''
     creates dict of dict with несумісність of components
@@ -55,8 +45,9 @@ def create_comp_dict(content: list) -> dict:
         content (list): повний ліст інфи від файлу(всі секції)
 
     Returns:
-        dict: словник з сумісністю елементів(True - сумісні, False - не сумісні)(компоненти - ключі зовніщнього,
-                                     наступний компонент - той який хочемо порівняти, і значення буде True/False)
+        dict: словник з сумісністю елементів(True - сумісні, False - не сумісні)
+        (компоненти - ключі зовніщнього,
+        наступний компонент - той який хочемо порівняти, і значення буде True/False)
 
     Приклад:
         dict[Компонент1][Компонент1]
@@ -72,7 +63,7 @@ def create_comp_dict(content: list) -> dict:
 
         for el in content[2][1:]:
             # словник для всіх компонент
-            comp_dict[el] = dict()
+            comp_dict[el] = {}
 
             for el1 in content[2][1:]:
                 comp_dict[el][el1] = True
@@ -91,12 +82,7 @@ def create_comp_dict(content: list) -> dict:
         return comp_dict
     except Exception:
         raise ValueError('Некоректний ввід в функцію, перевірте,\
-що ви ввели у фалі, щось пішло не так')
-
-
-
-
-
+що ви ввели у файлі, щось пішло не так')
 
 
 
@@ -114,9 +100,9 @@ def create_packets(content: list) -> dict:
         dict[Пакет1] = [Компонент1, Компонент2, ...]
     '''
     if not isinstance(content, list):
-        raise ValueError('Направильний ввід create_packets()')
+        raise ValueError('Неправильний ввід create_packets()')
     if not content:
-        raise ValueError('Направильний ввід create_packets()')
+        raise ValueError('Неправильний ввід create_packets()')
 
     try:
         packets = {}
@@ -128,13 +114,7 @@ def create_packets(content: list) -> dict:
 
         return packets
     except Exception:
-        raise ValueError('Некоректний ввід в функцію, перевірте, що ви ввели у фалі')
-
-
-
-
-
-
+        raise ValueError('Некоректний ввід в функцію, перевірте, що ви ввели у файлі')
 
 # ============= Helping functions ==================== #
 
@@ -164,13 +144,6 @@ def packet_remake(line: str) -> list:
     return key, value
 
 
-
-
-
-
-
-
-
 def remake(line: str) -> list:
     '''
     divides line into parts
@@ -195,20 +168,16 @@ def remake(line: str) -> list:
 
 
 
-
-
-
-
 # ========================== Testing ========================== #
 
-FILENAME = 'data.txt'
+# FILENAME = 'data.txt'
 
-all_txt1 = read_data(FILENAME)
-comp_dict1 = create_comp_dict(all_txt1)
-packets1 = create_packets(all_txt1)
+# all_txt1 = read_data(FILENAME)
+# comp_dict1 = create_comp_dict(all_txt1)
+# packets1 = create_packets(all_txt1)
 
-# print(all_txt1)
-print('-------------------')
-print(comp_dict1)
-print('-------------------')
-print(packets1)
+# # print(all_txt1)
+# print('-------------------')
+# print(comp_dict1)
+# print('-------------------')
+# print(packets1)

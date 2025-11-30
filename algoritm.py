@@ -1,6 +1,35 @@
 '''ALGS'''
+import data as d
+
+text = d.read_data('data_test.txt')
+components = text[2][1:]
+checked = d.create_comp_dict(text)
+user_list = []
 
 
-print('1234')
-print()
-print("0000")
+# print(components)
+# print(checked)
+#legit = d.create_packets(text)
+#print(legit)
+
+
+def check_request(request: str) -> bool:
+    '''Перевіряє, чи можна додати опцію, якщо можна, повертає True
+    Якщо не можна через не сумісніть, повертає False'''
+    key = checked[request]
+    for ch in key:
+        if key[ch] is False and key[ch] in user_list:
+            return False
+    return True
+
+
+
+def add_component(request: str) -> bool:
+    '''Додає компоненту до списку бажаних опцій користувача, у випадку
+    якщо опцію додати неможливо через те, що вона не сумісна з якоюсь іншою - повертає False
+    якщо опцію можна додати, додає опцію та повертає True'''
+    if request in components and check_request(request):
+        user_list.append(request)
+        return True
+    return False
+
