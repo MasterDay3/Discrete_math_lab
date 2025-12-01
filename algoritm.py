@@ -33,7 +33,7 @@ def add_component(request: str) -> bool:
         return True
     return False
 
-
+#test commit
 
 def delete_component(request: str) -> bool:
     '''Видаляє компоненту з обраних
