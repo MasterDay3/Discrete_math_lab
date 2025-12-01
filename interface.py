@@ -1,9 +1,13 @@
+"""Interface"""
 import streamlit as st
-import pandas as pd
-import numpy as np
+# import pandas as pd
+# import numpy as np
 
 st.title('Збірка користувацьких замовлень.')
-st.write('test #1')
-name = st.text_input("Введіть своє ім'я:")
+st.markdown("<span style='color: blue;'>Визначимо, чи можливо зібрати Ваше \
+кастомне замовлення на основі залежностей між компонентами.</span>", unsafe_allow_html=True)
+# st.text('Визначимо, чи можливо зібрати Ваше кастомне замовлення на основі \
+# залежностей між компонентами.')
+name = st.text_input("Як можна до Вас звертатись?")
 
-choice = st.slider("Оберіть:")
+# choice = st.slider("Оберіть:")
