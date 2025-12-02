@@ -171,12 +171,11 @@ def remake(line: str) -> list:
 # ========================== Testing ========================== #
 
 # FILENAME = 'data.txt'
-
 # all_txt1 = read_data(FILENAME)
 # comp_dict1 = create_comp_dict(all_txt1)
 # packets1 = create_packets(all_txt1)
 
-# # print(all_txt1)
+# print(all_txt1)
 # print('-------------------')
 # print(comp_dict1)
 # print('-------------------')
