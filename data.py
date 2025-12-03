@@ -158,7 +158,7 @@ def remake(line: str) -> list:
     if not isinstance(line, str):
         raise ValueError('Ви погано ввели дані в функцію remake')
 
-    parts = line.split('і')
+    parts = line.split(' і ')
 
     if len(parts) != 2:
         raise ValueError('Ви погано ввели дані в функцію remake')
@@ -170,7 +170,7 @@ def remake(line: str) -> list:
 
 # ========================== Testing ========================== #
 
-# FILENAME = 'data.txt'
+# FILENAME = 'big_data_test.txt'
 # all_txt1 = read_data(FILENAME)
 # comp_dict1 = create_comp_dict(all_txt1)
 # packets1 = create_packets(all_txt1)

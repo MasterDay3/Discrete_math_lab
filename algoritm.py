@@ -1,7 +1,9 @@
 '''ALGS'''
 import data as d
 
-text = d.read_data('data_test.txt')
+FILENAME = 'big_data_test.txt'
+
+text = d.read_data(FILENAME)
 components = text[2][1:]
 checked = d.create_comp_dict(text)
 user_list = []
@@ -28,7 +30,7 @@ def add_component(request: str) -> bool:
     '''Додає компоненту до списку бажаних опцій користувача, у випадку
     якщо опцію додати неможливо через те, що вона не сумісна з якоюсь іншою - повертає False
     якщо опцію можна додати, додає опцію та повертає True'''
-    if request in components and check_request(request):
+    if request in components and check_request(request) and request not in user_list:
         user_list.append(request)
         return True
     return False
@@ -42,3 +44,14 @@ def delete_component(request: str) -> bool:
         user_list.remove(request)
         return True
     return False
+
+
+
+
+# TESTS
+# if __name__ == '__main__':
+#     add_component('Турбінований V8 двигун')
+#     add_component('Лазерні фари')
+#     #print(add_component('LED-матриця'))
+#     delete_component('Лазерні фари')
+#     print(user_list)
