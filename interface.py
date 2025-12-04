@@ -12,15 +12,15 @@ def introduction():
     st.title('Збірка користувацьких замовлень.')
     name = st.text_input("Введіть своє ім'я:")
     if name:
-        st.write(f"<span style='color: blue;'>Вітаємо, {name}!</span>", unsafe_allow_html=True)
-        return name
+        st.write(f"<span style='color: blue;'>Вітаємо, {name}!\n</span>", unsafe_allow_html=True)
     st.markdown("<span style='color: blue;'>Визначимо, чи можливо зібрати Ваше \
     кастомне замовлення на основі залежностей між компонентами.</span>", unsafe_allow_html=True)
-    
+    return name
+
 
 def final_button(name):
     if st.button("Зібрати замовлення"):
-        if add_component():
+        if add_component(): # тут я поміняю функцію
             st.markdown(
                 f"<div style='padding:50px; font-size:32px; color:green; text-align:center;'>"
                 f"Вітання {name if name else 'користувач'}! Все добре, замовлення прийнято!"
@@ -30,9 +30,10 @@ def final_button(name):
         else:
             st.markdown(
                 f"<div style='padding:50px; font-size:32px; color:red; text-align:center;'>"
-                f"Шановний {name if name else 'користувач'}, на жаль, суміжність між компонентами відсутня. Замовлення не виконане."
+                f"Шановний {name if name else 'користувач'}, на жаль, суміжність між \
+                компонентами відсутня. Замовлення не виконане."
             )
-        
+
 # all_txt1 = read_data(FILENAME)
 # comp_dict = create_comp_dict(all_txt1)
 
