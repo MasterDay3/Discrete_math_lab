@@ -20,7 +20,11 @@ def introduction():
 
 def final_button(name):
     if st.button("Зібрати замовлення"):
-        if add_component(): # тут я поміняю функцію
+        success = add_component()  # тут я поміняю функцію
+        st.session_state["order_success"] = success
+
+    if "order_success" in st.session_state:
+        if st.session_state["order_success"]:
             st.markdown(
                 f"<div style='padding:50px; font-size:32px; color:green; text-align:center;'>"
                 f"Вітання {name if name else 'користувач'}! Все добре, замовлення прийнято!"
@@ -30,9 +34,13 @@ def final_button(name):
         else:
             st.markdown(
                 f"<div style='padding:50px; font-size:32px; color:red; text-align:center;'>"
-                f"Шановний {name if name else 'користувач'}, на жаль, суміжність між \
+                f"{name if name else 'Кристувачу'}, на жаль, суміжність між \
                 компонентами відсутня. Замовлення не виконане."
             )
+
+            if st.button("Повернутися до вибору компонентів"):
+                del st.session_state["order_success"]  #очистити стан
+                st.rerun()
 
 # all_txt1 = read_data(FILENAME)
 # comp_dict = create_comp_dict(all_txt1)
