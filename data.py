@@ -4,6 +4,9 @@ Functions to get data from file
 
 
 
+import copy
+
+
 
 def read_data(filepath: str) -> list:
     '''
@@ -116,7 +119,249 @@ def create_packets(content: list) -> dict:
     except Exception:
         raise ValueError('Некоректний ввід в функцію, перевірте, що ви ввели у файлі')
 
+
+
+
+
+
+def get_uncompatable(content: list) -> dict:
+    '''
+    Створює словник з несумісністю компонентів
+
+    Args:
+        content (list): повний ліст інфи від файлу(всі секції)
+
+    Returns:
+        dict: словник з сумісністю елементів(True - сумісні, False - не сумісні)
+    '''
+
+    if not isinstance(content, list):
+        raise ValueError('Неправильний ввід get_uncompatable()')
+    if not content:
+        raise ValueError('Неправильний ввід get_uncompatable()')
+
+    txt = content[3][1:]
+
+    uncompatable_dict = {}
+    for el in txt:
+        comp1, comp2 = remake(el)
+
+        if comp1 not in uncompatable_dict:
+            uncompatable_dict[comp1] = []
+
+        if comp2 not in uncompatable_dict:
+            uncompatable_dict[comp2] = []
+
+        uncompatable_dict[comp1].append(comp2)
+        uncompatable_dict[comp2].append(comp1)
+
+    return uncompatable_dict
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def get_necessary(content: list) -> dict:
+    '''
+    Створює словник з необхідними компонентами для кожного компонента
+
+    Args:
+        content (list): повний ліст інфи від файлу(всі секції)
+
+    Returns:
+        dict: словник з необхідними компонентами(ключ - компонент, значення - список необхідних компонентів)
+    '''
+
+    if not isinstance(content, list):
+        raise ValueError('Неправильний ввід get_necessary()')
+    if not content:
+        raise ValueError('Неправильний ввід get_necessary()')
+
+    txt = content[4][1:]
+
+    necessary_dict = {}
+    for el in txt:
+        # спліт за то
+        comp1, comp2 = remake_nesessary(el)
+
+        # робимо місце куда пхати
+        if comp1 not in necessary_dict:
+            necessary_dict[comp1] = []
+
+        if comp2 not in necessary_dict:
+            necessary_dict[comp2] = []
+
+        if isinstance(comp2, list):
+            # якщо ліст
+            necessary_dict[comp1].extend(comp2)
+            necessary_dict[comp2].append(comp1)
+
+        else:
+            # якщо стрінга
+            necessary_dict[comp1].append(comp2)
+            necessary_dict[comp2].append(comp1)
+
+
+
+
+    return necessary_dict
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def check(filename: str) -> dict:
+    '''
+    Функція приймає повний список з файлу (всі дані), і перевіряє, якщо компонента 1 необхідна для комп2, але комп 2 не сумісна з комп3,
+    то комп1 несумісна з комп3
+
+    Args:
+        content (list): повний ліст інфи від файлу(всі секції)
+
+    Returns:
+        tuple: кортеж з двох елементів:
+            dict: новий словник з сумісністю елементів(True - сумісні, False - не сумісні)
+            dict: новий словник з пакетами(ключ - назва пакету, значення - список компонентів в пакеті)
+    '''
+
+    if not isinstance(filename, str):
+        raise ValueError('Неправильний ввід check()')
+
+    if not filename:
+        raise ValueError('Неправильний ввід check()')
+
+
+    content = read_data(filename)
+
+    necessary = get_necessary(content)
+    uncom = get_uncompatable(content)
+
+    new_uncom = copy.deepcopy(uncom)
+    new_comp_dict = create_comp_dict(content)
+
+
+    for comp1 in necessary:
+        for comp2 in necessary[comp1]:
+            # comp2 несумісний comp3
+            if comp2 in uncom:
+                for comp3 in uncom[comp2]:
+
+                    #в дві сторони
+                    if comp1 not in new_uncom:
+                        new_uncom[comp1] = []
+                    if comp3 not in new_uncom:
+                        new_uncom[comp3] = []
+
+                    if comp3 not in new_uncom[comp1]:
+                        new_uncom[comp1].append(comp3)
+                    if comp1 not in new_uncom[comp3]:
+                        new_uncom[comp3].append(comp1)
+
+                    new_comp_dict[comp1][comp3] = False
+                    new_comp_dict[comp3][comp1] = False
+
+    #  comp1 залежить від comp2, а comp2 несумісний з comp3
+    reverse_necessary = {}
+    for comp1, deps in necessary.items():
+        for comp2 in deps:
+            if comp2 not in reverse_necessary:
+                reverse_necessary[comp2] = []
+            reverse_necessary[comp2].append(comp1)
+
+
+    for comp2 in reverse_necessary:
+
+        for comp1 in reverse_necessary[comp2]:
+            # comp1 залежить від comp2
+            if comp2 in uncom:
+                for comp3 in uncom[comp2]:
+
+                    # comp2 несумісний з comp3
+                    if comp1 not in new_uncom:
+                        new_uncom[comp1] = []
+                    if comp3 not in new_uncom:
+                        new_uncom[comp3] = []
+
+                    if comp3 not in new_uncom[comp1]:
+                        new_uncom[comp1].append(comp3)
+                    if comp1 not in new_uncom[comp3]:
+                        new_uncom[comp3].append(comp1)
+
+                    new_comp_dict[comp1][comp3] = False
+                    new_comp_dict[comp3][comp1] = False
+
+    return new_comp_dict
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ============= Helping functions ==================== #
+
+
+
+def remake_nesessary(line: str) -> list:
+    '''
+    helping function that divides line into parts for necessary components for better handling
+    Допоміжна функція, яка ділить рядок на частини для необхідних компонент для кращої обробки
+
+    Args:
+        line (str): рядок з необхідними компонентами(Компонент1 необхідний для Компонент2)
+    Returns:
+        list: список з двох компонентів
+    '''
+
+    if not line:
+        raise ValueError('Ви погано ввели дані в функцію remake_necessary (пуста)')
+
+    if 'то' not in line:
+        raise ValueError('Ви погано ввели дані в функцію remake_necessary (нема "то")')
+
+    parts = line.split(' то ')
+    comp1 = parts[0].strip()
+    comp2 = parts[1].strip()
+
+    if ',' in comp2:
+        comp2 = [el.strip() for el in comp2.split(',')]
+
+    return comp1, comp2
+
+
+
+
+
 
 def packet_remake(line: str) -> list:
     '''
@@ -142,6 +387,14 @@ def packet_remake(line: str) -> list:
     value = [el.strip() for el in parts[1].strip().split(',')]
 
     return key, value
+
+
+
+
+
+
+
+
 
 
 def remake(line: str) -> list:
@@ -171,12 +424,36 @@ def remake(line: str) -> list:
 # ========================== Testing ========================== #
 
 # FILENAME = 'big_data_test.txt'
-# all_txt1 = read_data(FILENAME)
-# comp_dict1 = create_comp_dict(all_txt1)
-# packets1 = create_packets(all_txt1)
+FILENAME = 'data.txt'
+FILENAME = 'data_test.txt'
+all_txt1 = read_data(FILENAME)
+comp_dict1 = create_comp_dict(all_txt1)
+packets1 = create_packets(all_txt1)
+
+new_comp = check(FILENAME)
 
 # print(all_txt1)
-# print('-------------------')
-# print(comp_dict1)
-# print('-------------------')
-# print(packets1)
+print('-------------------')
+print(comp_dict1)
+print('-------------------')
+print(packets1)
+print('-------------------')
+print(get_necessary(all_txt1))
+print('-------------------')
+print(get_uncompatable(all_txt1))
+print('-------------------')
+print(new_comp)
+print('-------------------')
+
+
+
+
+
+
+
+# ========== лютий тестінг ========== #
+# a = {'w': 2, 'x': 3, 'y': 4}
+# i = 4
+
+# if i in a.values():
+#     print('yes')
