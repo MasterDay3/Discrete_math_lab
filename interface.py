@@ -1,6 +1,6 @@
 """Interface"""
 import streamlit as st
-from data import create_comp_dict, read_data
+from data import create_comp_dict, read_data, create_packets
 from algoritm import check_request, add_component
 
 # import pandas as pd
@@ -64,16 +64,33 @@ def show_components_checkboxes(components: dict, column_count: int = 4):
         column[i % column_count].checkbox(component)
         i += 1
 
+def show_packets_checkboxes(packets: dict, column_count: int = 4):
+    """
+    Виводить всі пакети на екран з вибраною
+    довжиною рядків(column_count) як чекбокси і повертає обрані.
+    """
+    st.subheader("Виберіть пакети:")
+    column = st.columns(column_count)
+    i = 0
+
+    for packet in packets:
+        column[i % column_count].checkbox(packet)
+        i += 1
+
+
+
 def main():
     """
     Основна функція виводу інтерфейсу
     """
     all_txt1 = read_data(FILENAME)
     comp_dict = create_comp_dict(all_txt1)
+    packets = create_packets(all_txt1)
 
     name = introduction()
     show_header_name(all_txt1)
     show_components_checkboxes(comp_dict)
+    show_packets_checkboxes(packets)
     final_button(name)
 
 if __name__ == "__main__":
