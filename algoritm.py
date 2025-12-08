@@ -55,3 +55,4 @@ def delete_component(request: str) -> bool:
 #     #print(add_component('LED-матриця'))
 #     delete_component('Лазерні фари')
 #     print(user_list)
+# wfdswvc
