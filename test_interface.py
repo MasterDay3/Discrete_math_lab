@@ -8,15 +8,21 @@ from algoritm import check_request, add_component
 
 FILENAME = "data_test.txt"
 
+st.set_page_config(layout="wide")
+
 def introduction():
     st.title('Збірка користувацьких замовлень.')
     name = st.text_input("Введіть своє ім'я:")
-    if name:
-        st.write(f"<span style='color: blue;'>Вітаємо, {name}!\n</span>", unsafe_allow_html=True)
-    st.markdown("<span style='color: blue;'>Визначимо, чи можливо зібрати Ваше \
-    кастомне замовлення на основі залежностей між компонентами.</span>", unsafe_allow_html=True)
-    return name
 
+    if name:
+        st.markdown(f"<span style='color:blue;'>Вітаємо, {name}!</span>", unsafe_allow_html=True)
+
+    st.markdown(
+        "<span style='color:blue;'>Визначимо, чи можливо зібрати Ваше кастомне "
+        "замовлення на основі залежностей між компонентами.</span>",
+        unsafe_allow_html=True
+    )
+    return name
 
 # def final_button(name):
 #     if st.button("Зібрати замовлення"):
@@ -45,70 +51,77 @@ def introduction():
 # all_txt1 = read_data(FILENAME)
 # comp_dict = create_comp_dict(all_txt1)
 
+
 def show_header_name(all_text: list):
     for i in all_text:
         if '===== Назва =====' in i:
             st.title(i[1])
 
-def show_components_checkboxes(components: dict, column_count: int = 4):
+
+def show_components_checkboxes(components: dict, column_count: int = 8):
     """
-    Виводить всі компоненти на екран з вибраною
-    довжиною рядків(column_count) як чекбокси і повертає обрані.
+    Виводить всі компоненти як чекбокси.
     """
     st.subheader("Виберіть компоненти для збірки замовлення:")
 
-    column = st.columns(column_count)
+    for component in components:
+        if component not in st.session_state:
+            st.session_state[component] = False
+
+    columns = st.columns(column_count)
     i = 0
 
     for component in components:
-        column[i % column_count].checkbox(component)
+        columns[i % column_count].checkbox(component, key=component)
         i += 1
 
-def show_packets_checkboxes(packets: dict, column_count: int = 4):
+def show_packets_buttons(packets: dict, column_count: int = 8):
     """
-    Виводить всі пакети на екран з вибраною
-    довжиною рядків(column_count) як чекбокси і повертає обрані.
+    Виводить кнопки пакетів.
     """
-    st.subheader("Виберіть пакети:")
-    column = st.columns(column_count)
+    st.subheader("Виберіть пакет:")
+    columns = st.columns(column_count)
     i = 0
 
+    chosen_packet = None
+
     for packet in packets:
-        column[i % column_count].button(packet)
+        if columns[i % column_count].button(packet):
+            chosen_packet = packet
         i += 1
 
-def tick_boxes_from_packets(components: dict, packets: dict):
+    return chosen_packet
+
+
+def tick_boxes_from_packets(packets, chosen_packet):
     """
-    Вибирає всі чекбокси компонентів коли натиснуто кнопку пакета.
-    Пакет вміщає в собі декілька компонентів.
+    Якщо натиснута кнопка пакета —
+    відмічає відповідні компоненти.
     """
+    if not chosen_packet:
+        return
 
-    for packet, comp_list in packets.items():
+    for comp in packets[chosen_packet]:
+        st.session_state[comp] = True
 
-        # КНОПКА ПАКЕТА
-        if st.button(packet):
-
-            for comp in comp_list:
-                st.session_state[comp] = True
-
-            st.success(f"Пакет '{packet}' активовано!")
-
-
+    st.success(f"Пакет '{chosen_packet}' активовано!")
 
 def main():
-    """
-    Основна функція виводу інтерфейсу
-    """
+
     all_txt1 = read_data(FILENAME)
     comp_dict = create_comp_dict(all_txt1)
     packets = create_packets(all_txt1)
 
     name = introduction()
     show_header_name(all_txt1)
+
+    chosen_packet = show_packets_buttons(packets)
+    tick_boxes_from_packets(packets, chosen_packet)
+
     show_components_checkboxes(comp_dict)
-    show_packets_checkboxes(packets)
-    tick_boxes_from_packets(comp_dict, packets)
-    #final_button(name)
+
+    # final_button(name, comp_dict)
+
 
 if __name__ == "__main__":
     main()
