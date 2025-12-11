@@ -147,7 +147,8 @@ def order(data: dict, num: int = 4):
     st.success("Замовлення успішно зібране!")
     st.write("Ваші вибрані компоненти:")
     st.write(selected)
-    return None
+    # список обраних компонент
+    return selected
 
 
 
