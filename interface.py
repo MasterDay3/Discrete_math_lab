@@ -3,7 +3,8 @@ import streamlit as st
 from data import create_comp_dict, read_data, create_packets
 from algoritm import check_request
 
-FILENAME = "data_test.txt"
+FILENAME = "big_data_test.txt"
+# FILENAME = "data_test.txt"
 
 def introduction():
     """Вивід заголовку та привітання"""
@@ -81,19 +82,18 @@ def tick_boxes_from_packets(packets: dict):
     Вибирає всі чекбокси компонентів коли натиснуто кнопку пакета.
     Пакет вміщає в собі декілька компонентів.
     """
+    x = len(packets)
+    cols = st.columns(x)
+    for index, (but, val) in enumerate(packets.items()):
+        with cols[index % x]:
+            if st.button(but):
+                for i in val:
+                    st.session_state[f"item_{i}"] = True
 
-    for packet, comp_list in packets.items():
-
-        # КНОПКА ПАКЕТА
-        if st.button(packet):
-
-            for comp in comp_list:
-                st.session_state[comp] = True
-
-            st.success(f"Пакет '{packet}' активовано!")
+                st.success(f"Пакет '{but}' активовано!")
 
 
-def order(data, num):
+def order(data: dict, num: int = 4):
 
     """Main Data"""
 
@@ -122,15 +122,17 @@ def main():
     """
     Основна функція виводу інтерфейсу
     """
+    st.set_page_config(layout="wide")
     all_txt1 = read_data(FILENAME)
     comp_dict = create_comp_dict(all_txt1)
     packets = create_packets(all_txt1)
 
     name = introduction()
     show_header_name(all_txt1)
-    show_components_checkboxes(comp_dict)
-    show_packets_checkboxes(packets)
+    # show_components_checkboxes(comp_dict)
+    # show_packets_checkboxes(packets)
     tick_boxes_from_packets(packets)
+    order(comp_dict, 5)
     #final_button(name)
 
 if __name__ == "__main__":
