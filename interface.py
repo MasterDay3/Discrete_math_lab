@@ -3,20 +3,8 @@ import streamlit as st
 from data import create_comp_dict, read_data, create_packets, get_necessary
 from algoritm import add_component, check_request, user_list, checked
 
-<<<<<<< Updated upstream
 FILENAME = "big_data_test.txt"
 # FILENAME = "data_test.txt"
-=======
-<<<<<<< HEAD
-# import pandas as pd
-# import numpy as np
-
-FILENAME = "big_data_test.txt"
-=======
-FILENAME = "big_data_test.txt"
-# FILENAME = "data_test.txt"
->>>>>>> ec0e2de93f3a42e546f552430fba94983a4eb546
->>>>>>> Stashed changes
 
 def introduction():
     """Вивід заголовку та привітання"""
@@ -128,17 +116,22 @@ def order(data: dict, num: int = 4):
 
     selected = [comp for comp in data if st.session_state[f"item_{comp}"]]
     incompatibe = [comp for comp in selected if not add_component(comp)]
+    # incomplete = []
+    # incomplete = get_necessary(selected)
     user_list.clear()
-    # incomplete = get_necessary(selected) # словник необхідностей
 
     if not selected:
-        st.warning("Нічого не вибрано")
+        st.warning("Не вибрано нічого")
         return None
 
-    # if incomplete: # виведення помилеи необхідності
+    # errors = []
+    # for comp in selected:
+    #     if not add_component(comp):
+    #         errors.append(comp)
+
+    # if incomplete:
     #     for comp, needed in incomplete.items():
     #         st.write(f"Компонента **{comp}** потребує: {needed}")
-    #     return None
 
     if incompatibe:
         st.error("Замовлення неможливо зібрати через несумісність!")
