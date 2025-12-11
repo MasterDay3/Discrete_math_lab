@@ -121,8 +121,8 @@ def order(data: dict, num: int = 4):
     user_list.clear()
 
     if not selected:
-        st.warning("IDI NAHUI")
-        return
+        st.warning("Не вибрано нічого")
+        return None
 
     # errors = []
     # for comp in selected:
@@ -141,11 +141,13 @@ def order(data: dict, num: int = 4):
             for other, compat in checked[err].items():
                 if compat is False and other in selected:
                     st.write(f"**{other}**")
+        return None
+
     # Якщо все норм
     st.success("Замовлення успішно зібране!")
     st.write("Ваші вибрані компоненти:")
     st.write(selected)
-    return
+    return None
 
 
 
