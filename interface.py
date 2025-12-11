@@ -3,8 +3,20 @@ import streamlit as st
 from data import create_comp_dict, read_data, create_packets, get_necessary
 from algoritm import add_component, check_request, user_list, checked
 
+<<<<<<< Updated upstream
 FILENAME = "big_data_test.txt"
 # FILENAME = "data_test.txt"
+=======
+<<<<<<< HEAD
+# import pandas as pd
+# import numpy as np
+
+FILENAME = "big_data_test.txt"
+=======
+FILENAME = "big_data_test.txt"
+# FILENAME = "data_test.txt"
+>>>>>>> ec0e2de93f3a42e546f552430fba94983a4eb546
+>>>>>>> Stashed changes
 
 def introduction():
     """Вивід заголовку та привітання"""
