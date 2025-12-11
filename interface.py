@@ -93,30 +93,39 @@ def tick_boxes_from_packets(components: dict, packets: dict):
             st.success(f"Пакет '{packet}' активовано!")
 
 
-def order(data):
+def order(data, num):
 
     """Main Data"""
 
     with st.form(key = "Order"):
-        cols = st.columns(4)
+        cols = st.columns(num)
 
-        for index, item in enumerate(data):
-            col_index = index % 4
+        for index, k in enumerate(data):
+            col_index = index % num
 
-            if f"item_{item}" not in st.session_state:
-                st.session_state.setdefault(f"item_{item}", False)
+            if f"item_{k}" not in st.session_state:
+                st.session_state.setdefault(f"item_{k}", False)
 
             with cols[col_index]:
-                st.checkbox(item, key = f"item_{item}")
+                st.checkbox(k, key = f"item_{k}")
 
         if st.form_submit_button("SUBMIT", key = "ASSEMBLE"):
-            selected = {item for item in data if st.session_state[f"item_{item}"]}
+            selected = [item for item in data if st.session_state[f"item_{item}"]]
 
             if selected:
-                st.success(selected)
+                st.success(selected) # функції миколи
             else:
                 st.error(selected)
 
+def package(data: dict):
+
+    """ dfghf """
+
+    for button, val in data.items():
+        st.button(label = "P1", key = f"{button}")
+        if st.session_state[f"{button}"]:
+            for i in val:
+                st.session_state[f"item_{i}"] = True
 
 
 def main():
