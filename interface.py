@@ -94,6 +94,31 @@ def tick_boxes_from_packets(components: dict, packets: dict):
             st.success(f"Пакет '{packet}' активовано!")
 
 
+def order(data):
+
+    """Main Data"""
+
+    with st.form(key = "Order"):
+        cols = st.columns(4)
+
+        for index, item in enumerate(data):
+            col_index = index % 4
+
+            if f"item_{item}" not in st.session_state:
+                st.session_state.setdefault(f"item_{item}", False)
+
+            with cols[col_index]:
+                st.checkbox(item, key = f"item_{item}")
+
+        if st.form_submit_button("SUBMIT", key = "ASSEMBLE"):
+            selected = {item for item in data if st.session_state[f"item_{item}"]}
+
+            if selected:
+                st.success(selected)
+            else:
+                st.error(selected)
+
+
 
 def main():
     """
