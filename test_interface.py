@@ -6,7 +6,7 @@ from algoritm import check_request, add_component
 # import pandas as pd
 # import numpy as np
 
-FILENAME = "data_test.txt"
+FILENAME = "big_data_test.txt"
 
 st.set_page_config(layout="wide")
 
@@ -62,18 +62,44 @@ def show_components_checkboxes(components: dict, column_count: int = 8):
     """
     Виводить всі компоненти як чекбокси.
     """
+    if "selected_components" not in st.session_state:
+        st.session_state["selected_components"] = []
+
     st.subheader("Виберіть компоненти для збірки замовлення:")
 
-    for component in components:
-        if component not in st.session_state:
-            st.session_state[component] = False
+    # ФОРМА — чекбокси + кнопка SUBMIT
+    with st.form(key="OrderForm"):
 
-    columns = st.columns(column_count)
-    i = 0
+        # Створення колонок
+        columns = st.columns(column_count)
+        i = 0
 
+        # Вивід чекбоксів
+        for component in components:
+
+            # ініціалізація стану компонентів
+            if component not in st.session_state:
+                st.session_state[component] = False
+
+            columns[i % column_count].checkbox(component, key=component)
+            i += 1
+
+        # КНОПКА SUBMIT
+        submitted = st.form_submit_button("SUBMIT")
+
+    # ОНОВЛЮЄМО СПИСОК ВИБРАНИХ ПІСЛЯ ФОРМИ
+    selected = []
     for component in components:
-        columns[i % column_count].checkbox(component, key=component)
-        i += 1
+        if st.session_state.get(component):
+            selected.append(component)
+
+    st.session_state["selected_components"] = selected
+
+    # Якщо клікнули SUBMIT — показуємо вікно з результатом
+    if submitted:
+        st.success("Ви вибрали такі компоненти:")
+        st.write(st.session_state["selected_components"])
+
 
 def show_packets_buttons(packets: dict, column_count: int = 8):
     """
