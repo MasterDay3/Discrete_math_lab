@@ -1,7 +1,7 @@
 """Interface"""
 import streamlit as st
-from data import create_comp_dict, read_data, create_packets
-from algoritm import check_request
+from data import create_comp_dict, read_data, create_packets, get_necessary
+from algoritm import add_component, check_request, user_list, checked
 
 FILENAME = "big_data_test.txt"
 # FILENAME = "data_test.txt"
@@ -97,25 +97,56 @@ def order(data: dict, num: int = 4):
 
     """Main Data"""
 
-    with st.form(key = "Order"):
+    with st.form(key = "OrderForm"):
         cols = st.columns(num)
 
-        for index, k in enumerate(data):
-            col_index = index % num
+        for index, component in enumerate(data):
+            key = f"item_{component}"
 
-            if f"item_{k}" not in st.session_state:
-                st.session_state.setdefault(f"item_{k}", False)
+            if key not in st.session_state:
+                st.session_state[key] = False
 
-            with cols[col_index]:
-                st.checkbox(k, key = f"item_{k}")
+            with cols[index % num]:
+                st.checkbox(component, key=key)
 
-        if st.form_submit_button("SUBMIT", key = "ASSEMBLE"):
-            selected = [item for item in data if st.session_state[f"item_{item}"]]
+        submited = st.form_submit_button("SUBMIT")
 
-            if selected:
-                st.success(selected) # функції миколи
-            else:
-                st.error(selected)
+    if not submited:
+        return
+
+    selected = [comp for comp in data if st.session_state[f"item_{comp}"]]
+    incompatibe = [comp for comp in selected if not add_component(comp)]
+    # incomplete = []
+    # incomplete = get_necessary(selected)
+    user_list.clear()
+
+    if not selected:
+        st.warning("IDI NAHUI")
+        return
+
+    # errors = []
+    # for comp in selected:
+    #     if not add_component(comp):
+    #         errors.append(comp)
+
+    # if incomplete:
+    #     for comp, needed in incomplete.items():
+    #         st.write(f"Компонента **{comp}** потребує: {needed}")
+
+    if incompatibe:
+        st.error("Замовлення неможливо зібрати через несумісність!")
+        for err in incompatibe:
+            st.write(f"Компонент **{err}** конфліктує з:")
+
+            for other, compat in checked[err].items():
+                if compat is False and other in selected:
+                    st.write(f"**{other}**")
+    # Якщо все норм
+    st.success("Замовлення успішно зібране!")
+    st.write("Ваші вибрані компоненти:")
+    st.write(selected)
+    return
+
 
 
 def main():
