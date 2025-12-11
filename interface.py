@@ -1,14 +1,12 @@
 """Interface"""
 import streamlit as st
 from data import create_comp_dict, read_data, create_packets
-from algoritm import check_request, add_component
-
-# import pandas as pd
-# import numpy as np
+from algoritm import check_request
 
 FILENAME = "data_test.txt"
 
 def introduction():
+    """Вивід заголовку та привітання"""
     st.title('Збірка користувацьких замовлень.')
     name = st.text_input("Введіть своє ім'я:")
     if name:
@@ -19,9 +17,12 @@ def introduction():
 
 
 # def final_button(name):
+#     """
+#     Кнопка для завершення замовлення з перевіркою залежностей.
+#     """
 #     if st.button("Зібрати замовлення"):
-#         #success = add_component()  # тут я поміняю функцію
-#         #st.session_state["order_success"] = success
+#         success =
+#         st.session_state["order_success"] = success
 
 #     if "order_success" in st.session_state:
 #         if st.session_state["order_success"]:
@@ -39,13 +40,11 @@ def introduction():
 #             )
 
 #             if st.button("Повернутися до вибору компонентів"):
-#                 del st.session_state["order_success"]  #очистити стан
+#                 del st.session_state["order_success"]
 #                 st.rerun()
 
-# all_txt1 = read_data(FILENAME)
-# comp_dict = create_comp_dict(all_txt1)
-
 def show_header_name(all_text: list):
+    """Вивід назви із файлу"""
     for i in all_text:
         if '===== Назва =====' in i:
             st.title(i[1])
