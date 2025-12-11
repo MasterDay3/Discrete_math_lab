@@ -128,22 +128,17 @@ def order(data: dict, num: int = 4):
 
     selected = [comp for comp in data if st.session_state[f"item_{comp}"]]
     incompatibe = [comp for comp in selected if not add_component(comp)]
-    # incomplete = []
-    # incomplete = get_necessary(selected)
     user_list.clear()
+    # incomplete = get_necessary(selected) # словник необхідностей
 
     if not selected:
-        st.warning("Не вибрано нічого")
+        st.warning("Нічого не вибрано")
         return None
 
-    # errors = []
-    # for comp in selected:
-    #     if not add_component(comp):
-    #         errors.append(comp)
-
-    # if incomplete:
+    # if incomplete: # виведення помилеи необхідності
     #     for comp, needed in incomplete.items():
     #         st.write(f"Компонента **{comp}** потребує: {needed}")
+    #     return None
 
     if incompatibe:
         st.error("Замовлення неможливо зібрати через несумісність!")
