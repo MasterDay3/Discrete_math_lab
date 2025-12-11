@@ -86,7 +86,8 @@ def main():
     # show_components_checkboxes(comp_dict)
     show_packets_checkboxes(packets)
     tick_boxes_from_packets(comp_dict, packets)
-    order()
+    # order()
+    # package()
     #final_button(name)
 
 
@@ -95,30 +96,39 @@ FILENAME = "big_data_test.txt"
 all_txt = read_data(FILENAME)
 components = create_comp_dict(all_txt)
 
-def order():
+def order(data, num):
 
-    """
-    Docstring for order
-    """
+    """Main Data"""
 
-    with st.form(key = "order"):
-        for item in components:
-            if f"item_{item}" not in st.session_state:
-                st.session_state.setdefault(f"item_{item}", False)
+    with st.form(key = "Order"):
+        cols = st.columns(num)
 
-        for item in components:
-            st.checkbox(item, key = f"item_{item}")
+        for index, k in enumerate(data):
+            col_index = index % num
+
+            if f"item_{k}" not in st.session_state:
+                st.session_state.setdefault(f"item_{k}", False)
+
+            with cols[col_index]:
+                st.checkbox(k, key = f"item_{k}")
 
         if st.form_submit_button("SUBMIT", key = "ASSEMBLE"):
-            selected = {item for item in components if st.session_state[f"item_{item}"]}
+            selected = [item for item in data if st.session_state[f"item_{item}"]]
 
+            if selected:
+                st.success(selected) # функції миколи
+            else:
+                st.error(selected)
 
-            st.write(selected)
-            # if selected: # відправка в функцію
-            #     if "Турбінований V8 двигун" in selected and "Карбоновий дах" in selected: # прописати функцію перевірки
-            #         st.error(f"CONFLICT ORDER: {selected}")
-            #     else: # додати ще шось
-            #         st.success(f"SUCCESS: {selected}")
+def package(data: dict):
+
+    """ dfghf """
+
+    for button, val in data.items():
+        st.button(label = "P1", key = f"{button}")
+        if st.session_state[f"{button}"]:
+            for i in val:
+                st.session_state[f"item_{i}"] = True
 
 
 if __name__ == "__main__":
