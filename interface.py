@@ -76,7 +76,7 @@ def show_packets_checkboxes(packets: dict, column_count: int = 4):
         column[i % column_count].button(packet)
         i += 1
 
-def tick_boxes_from_packets(components: dict, packets: dict):
+def tick_boxes_from_packets(packets: dict):
     """
     Вибирає всі чекбокси компонентів коли натиснуто кнопку пакета.
     Пакет вміщає в собі декілька компонентів.
@@ -117,16 +117,6 @@ def order(data, num):
             else:
                 st.error(selected)
 
-def package(data: dict):
-
-    """ dfghf """
-
-    for button, val in data.items():
-        st.button(label = "P1", key = f"{button}")
-        if st.session_state[f"{button}"]:
-            for i in val:
-                st.session_state[f"item_{i}"] = True
-
 
 def main():
     """
@@ -140,7 +130,7 @@ def main():
     show_header_name(all_txt1)
     show_components_checkboxes(comp_dict)
     show_packets_checkboxes(packets)
-    tick_boxes_from_packets(comp_dict, packets)
+    tick_boxes_from_packets(packets)
     #final_button(name)
 
 if __name__ == "__main__":

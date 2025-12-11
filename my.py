@@ -71,32 +71,32 @@ def tick_boxes_from_packets(components: dict, packets: dict):
             st.success(f"Пакет '{packet}' активовано!")
 
 
-def main():
+# def main():
 
-    """
-    Основна функція виводу інтерфейсу
-    """
+#     """
+#     Основна функція виводу інтерфейсу
+#     """
 
-    all_txt1 = read_data(FILENAME)
-    comp_dict = create_comp_dict(all_txt1)
-    packets = create_packets(all_txt1)
+#     all_txt1 = read_data(FILENAME)
+#     comp_dict = create_comp_dict(all_txt1)
+#     packets = create_packets(all_txt1)
 
-    name = introduction()
-    show_header_name(all_txt1)
-    # show_components_checkboxes(comp_dict)
-    show_packets_checkboxes(packets)
-    tick_boxes_from_packets(comp_dict, packets)
+#     name = introduction()
+#     show_header_name(all_txt1)
+#     # show_components_checkboxes(comp_dict)
+#     show_packets_checkboxes(packets)
+#     tick_boxes_from_packets(comp_dict, packets)
     # order()
     # package()
     #final_button(name)
 
 
 # FILENAME = "data_test.txt"
-FILENAME = "big_data_test.txt"
-all_txt = read_data(FILENAME)
-components = create_comp_dict(all_txt)
+# FILENAME = "big_data_test.txt"
+# all_txt = read_data(FILENAME)
+# components = create_comp_dict(all_txt)
 
-def order(data, num):
+def order(data, num: int = 4):
 
     """Main Data"""
 
@@ -107,7 +107,7 @@ def order(data, num):
             col_index = index % num
 
             if f"item_{k}" not in st.session_state:
-                st.session_state.setdefault(f"item_{k}", False)
+                st.session_state[f"item_{k}"] = False
 
             with cols[col_index]:
                 st.checkbox(k, key = f"item_{k}")
@@ -124,12 +124,28 @@ def package(data: dict):
 
     """ dfghf """
 
-    for button, val in data.items():
-        st.button(label = "P1", key = f"{button}")
-        if st.session_state[f"{button}"]:
+    for but, val in data.items():
+        if st.button(but):
             for i in val:
                 st.session_state[f"item_{i}"] = True
 
+    # for packet, comp_list in packets.items():
 
-if __name__ == "__main__":
-    main()
+    #     # КНОПКА ПАКЕТА
+    #     if st.button(packet):
+
+            # for comp in comp_list:
+            #     st.session_state[comp] = True
+
+    #         st.success(f"Пакет '{packet}' активовано!")
+
+d = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'k', 'l', 'm', 'n']
+b = {"A": {"b", "c", "d"}, "B": {"f", "h"}, "C": {"a", "k"}}
+
+
+package(b)
+order(d, 5)
+
+
+# if __name__ == "__main__":
+#     main()
