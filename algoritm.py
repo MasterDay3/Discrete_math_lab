@@ -1,16 +1,4 @@
 '''ALGS'''
-# import data as d
-
-FILENAME = 'big_data_test.txt'
-
-
-
-
-
-
-
-'''ALGS'''
-# import data as d
 
 FILENAME = 'big_data_test.txt'
 
@@ -36,7 +24,7 @@ def get_only_required(content: list) -> dict:
     if not content or len(content) < 5:
         return {}
 
-    # Секція Необхідність знаходиться під індексом 4
+
     txt = content[4][1:]
 
     required_dict = {}
@@ -55,6 +43,11 @@ def get_only_required(content: list) -> dict:
     return required_dict
 
 
+
+
+
+
+
 def check_dependencies(selected_components: list, required_dict: dict) -> dict:
     """
     Перевіряє, чи всі обрані компоненти мають необхідні (залежні) компоненти.
@@ -71,13 +64,12 @@ def check_dependencies(selected_components: list, required_dict: dict) -> dict:
     selected_set = set(selected_components)
 
     for component in selected_components:
-        # Перевіряємо, чи цей компонент (component) вимагає щось
+        # Перевіряємо, чи цей компонент вимагає щось
         if component in required_dict:
             missing = []
-            # Перебираємо, що саме він вимагає (needed_comp)
+
             for needed_comp in required_dict[component]:
-                # Якщо потрібний компонент не знаходиться у списку обраних,
-                # то це відсутня залежність.
+
                 if needed_comp not in selected_set:
                     missing.append(needed_comp)
 
@@ -85,34 +77,6 @@ def check_dependencies(selected_components: list, required_dict: dict) -> dict:
                 incomplete_dependencies[component] = missing
 
     return incomplete_dependencies
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#====================== Helping =====================
-# def if_possible_path_dfs():
-#     ''''''
-#     ...
-
-
-# def if_possible_path_bfs():
-#     ''''''
-#     ...
 
 
 
@@ -219,8 +183,6 @@ def check_request(request: str, filepath: str = 'main_graph.txt') -> bool:
     '''
     graph_dict, _ = parse_graph_to_dict(filepath)
 
-    # Перевіряємо, чи існує шлях від компонента до його анти-вершини (@Компонент)
-    # Якщо шлях існує, компонент несумісний.
     return not if_possible_path_dfs(graph_dict, request, f'@{request}')
 
 
@@ -233,26 +195,25 @@ def add_component(request: str, user_list: list, filename: str = 'main_graph.txt
     ПОВЕРТАЄ True, якщо сумісно і додано, інакше False.
     '''
     if request in user_list:
-        # Якщо вже обраний, вважаємо сумісним і нічого не робимо
         return True
 
-    # Створюємо тимчасовий список для перевірки
+
     temp_list = user_list + [request]
 
-    # Перевіряємо новий компонент на сумісність з усіма іншими в поточному (тимчасовому) списку
+
     for existing_comp in temp_list:
         for other_comp in temp_list:
             if existing_comp == other_comp:
                 continue
 
-            # Перевіряємо A -> @B
+            #  A -> @B
             if not check_full_compatibility([existing_comp], other_comp, filename):
                 return False # Знайдено конфлікт!
-            # Перевіряємо B -> @A (зворотний зв'язок)
+            #  B -> @A
             if not check_full_compatibility([other_comp], existing_comp, filename):
-                 return False # Знайдено зворотний конфлікт!
+                 return False
 
-    # Якщо компонент пройшов перевірку, додаємо його до user_list
+
     user_list.append(request)
     return True
 
@@ -275,71 +236,6 @@ def check_full_compatibility(component_list: list, target_component: str, filena
             # Шлях існує, отже, компонент несумісний із цільовим
             return False
     return True
-
-
-
-
-
-
-
-
-
-
-# def delete_component(request: str) -> bool:
-#     '''Видаляє компоненту з обраних
-#     Повертає True, якщо компоненту видалено і False, якщо її не було в списку'''
-#     if request in user_list:
-#         user_list.remove(request)
-#         return True
-#     return False
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -492,22 +388,24 @@ def create_comp_dot(filename: str) -> None:
     with open('main_graph.txt', 'w', encoding='utf-8') as file:
         file.write('{\n')
 
-
-
-
         # необхідності
         for el in content[4][1:]:
             first, second = remake_nesessary(el)
             file.write(f'{first} -> {second}\n')
 
-        # несумісності
+        # НЕСУМІСНОСТІʼ
         for el in content[3][1:]:
             first_un, second_un = remake(el)
+
+            # Component1 -> @Component2
             file.write(f'{first_un} -> @{second_un}\n')
 
-
+            #Component2 -> @Component1
+            file.write(f'{second_un} -> @{first_un}\n') # <--- ВАЖЛИВО!
 
     return None
+
+
 
 
 
@@ -643,58 +541,3 @@ def remake(line: str) -> list:
         raise ValueError('Ви погано ввели дані в функцію remake')
 
     return parts[0].strip(), parts[1].strip()
-
-
-
-
-
-
-# ========================== Testing ========================== #
-
-# FILENAME = 'big_data_test.txt'
-# FILENAME = 'data.txt'
-# FILENAME = 'big_data_test.txt'
-# all_txt1 = read_data(FILENAME)
-# a = ['Турбінований V8 двигун','Електричний двигун підтримки', 'Титанова вихлопна система', 'Активна аеродинаміка', 'Карбоновий капот']
-# create_comp_dot(FILENAME)
-# comp_set = set(el for el in all_txt1[2][1:])
-# get_user_graph('main_graph.txt', a, comp_set)
-# print(all_txt1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# ========================= ARGORITM =============================
-
-
-
-
-
-
-
-
-# TESTS
-# if __name__ == '__main__':
-#     add_component('Турбінований V8 двигун')
-#     add_component('Лазерні фари')
-#     #print(add_component('LED-матриця'))
-#     delete_component('Лазерні фари')
-#     print(user_list)
