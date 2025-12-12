@@ -322,6 +322,85 @@ def check(filename: str) -> dict:
 
 
 
+def create_comp_dot(filename: str) -> None:
+    '''
+    makes main graph
+    '''
+
+    if not isinstance(filename, str):
+        raise ValueError('Неправильний ввід create_comp_dot()')
+
+
+    content = read_data(filename)
+
+    num = len(content[2])
+
+    # @ не верш
+
+
+    with open('main_graph.dot', 'w', encoding='utf-8') as file:
+        # необхідності
+        for el in content[4][1:]:
+            first, second = remake_nesessary(el)
+            file.write(f"{first} -> {second}\n")
+
+        # несумісності
+        for el in content[3][1:]:
+            first_un, second_un = remake(el)
+            file.write(f'{first_un} -> @{second_un}\n')
+            file.write(f'{second_un} -> @{first_un}\n')
+
+
+
+
+
+def user_graph(filename: str, selected: list, comps: set) -> None:
+    '''
+    lalala
+    '''
+
+    if not isinstance(filename, str):
+        raise  ValueError('Неправильний ввід user_graph()')
+
+    with open(filename, 'a', encoding='utf-8') as file:
+        itter = len(selected)
+        used = set()
+
+        anti_dict = {}
+
+        for el in comps:
+            anti_dict[el] = f'-{el}'
+
+        # вибір
+        for i in range(0, itter - 1):
+            first = selected[i]
+            second = selected[i+1]
+
+            file.write(f'{first} -> {second}\n')
+            used.add(first)
+            used.add(second)
+
+        anti_comps = comps.intersection(used)
+
+        for el in comps:
+            for vert in anti_comps:
+                if vert not in anti_comps:
+                    raise ValueError('нема компоненти в user_graph()')
+
+                if f'{el} -> {vert}':
+                    ...
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -421,11 +500,13 @@ def remake(line: str) -> list:
 
 
 
+
+
 # ========================== Testing ========================== #
 
 # FILENAME = 'big_data_test.txt'
-FILENAME = 'data.txt'
-FILENAME = 'data_test.txt'
+# FILENAME = 'data.txt'
+FILENAME = 'big_data_test.txt'
 all_txt1 = read_data(FILENAME)
 comp_dict1 = create_comp_dict(all_txt1)
 packets1 = create_packets(all_txt1)
@@ -433,17 +514,18 @@ packets1 = create_packets(all_txt1)
 new_comp = check(FILENAME)
 
 # print(all_txt1)
-print('-------------------')
-print(comp_dict1)
-print('-------------------')
-print(packets1)
-print('-------------------')
-print(get_necessary(all_txt1))
-print('-------------------')
-print(get_uncompatable(all_txt1))
-print('-------------------')
-print(new_comp)
-print('-------------------')
+create_comp_dot(FILENAME)
+# print('-------------------')
+# print(comp_dict1)
+# print('-------------------')
+# print(packets1)
+# print('-------------------')
+# print(get_necessary(all_txt1))
+# print('-------------------')
+# print(get_uncompatable(all_txt1))
+# print('-------------------')
+# print(new_comp)
+# print('-------------------')
 
 
 
@@ -451,9 +533,9 @@ print('-------------------')
 
 
 
-# ========== лютий тестінг ========== #
-# a = {'w': 2, 'x': 3, 'y': 4}
-# i = 4
+# # ========== лютий тестінг ========== #
+# # a = {'w': 2, 'x': 3, 'y': 4}
+# # i = 4
 
-# if i in a.values():
-#     print('yes')
+# # if i in a.values():
+# #     print('yes')
